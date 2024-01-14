@@ -5,14 +5,14 @@
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {14, 15, -16}
+  {-11, -12, -13}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{11, 12, -13}
+  ,{14, 15, 16}
 
   // IMU Port
-  ,21
+  ,0
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -61,7 +61,7 @@ void initialize() {
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
-  chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
+  chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
   chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
 
@@ -152,8 +152,9 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   pros::Controller master(CONTROLLER_MASTER);
-  pros::Motor intake(1);
-  pros::Motor catapult(20);
+  // initialize motors
+  // pros::Motor intake(1); 
+  // pros::Motor catapult(20);
   while (true) {
 
     chassis.tank(); // Tank control
@@ -165,6 +166,7 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
+  /* intake code
   if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
     intake = 127;
   } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
@@ -172,6 +174,7 @@ void opcontrol() {
   } else {
     intake = 0;
   }
+  */
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

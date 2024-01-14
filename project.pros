@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "EZ-Template-Example-Proj-2.2.0",
+    "project_name": "EZTemplate",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -332,7 +332,8 @@
     },
     "upload_options": {
       "icon": "pros",
-      "description": "vex2024"
+      "description": "vex2024",
+      "slot": 3
     }
   }
 }
