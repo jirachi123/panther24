@@ -5,14 +5,14 @@
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-11, -12, -13}
+  {-9, -10, -20}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{14, 15, 16}
+  ,{2, 6, 12}
 
   // IMU Port
-  ,0
+  ,11
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -26,7 +26,7 @@ Drive chassis (
   //    (or gear ratio of tracking wheel)
   // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
   // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-  ,0.75
+  ,1.33
 
 
   // Uncomment if using tracking wheels
@@ -153,8 +153,13 @@ void opcontrol() {
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   pros::Controller master(CONTROLLER_MASTER);
   // initialize motors
-  // pros::Motor intake(1); 
-  // pros::Motor catapult(20);
+  // double-acting: B
+  // single-acting: E + f 
+  pros::Motor vision(7);
+  pros::Motor intake(19); 
+  pros::Motor catapult(1);
+  intake.set_brake_mode(MOTOR_BRAKE_HOLD);
+
   while (true) {
 
     chassis.tank(); // Tank control
@@ -166,15 +171,24 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-  /* intake code
-  if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-    intake = 127;
-  } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+  // catapult code
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+    catapult = -127; 
+  } else {
+    catapult = 0;
+  }
+
+
+
+  // intake code
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
     intake = -127;
+  } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    intake = 127;
   } else {
     intake = 0;
   }
-  */
+
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

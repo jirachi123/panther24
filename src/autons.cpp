@@ -26,10 +26,10 @@ const int SWING_SPEED = 90;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, 11, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
+  chassis.set_pid_constants(&chassis.headingPID, 15, 0, 25, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 0.25, 0.05, 0, 15);
+  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 10, 5, 15);
+  chassis.set_pid_constants(&chassis.turnPID, 6, 0.003, 22.5, 15);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
 }
 
@@ -39,10 +39,9 @@ void one_mogo_constants() {
   chassis.set_pid_constants(&chassis.headingPID, 11, 0, 20, 0);
   chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
   chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
+  chassis.set_pid_constants(&chassis.turnPID, 5, 0, 20, 0);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
-}
-
+} 
 void two_mogo_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
@@ -71,16 +70,21 @@ void drive_example() {
   // The second parameter is max speed the robot will drive at
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-
-
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  pros::Imu imu_sensor(11);
+  pros::Controller master (CONTROLLER_MASTER);
+  string val = std::to_string(imu_sensor.get_heading());
+  
+  chassis.set_drive_pid(48, DRIVE_SPEED, true);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
-  chassis.wait_drive();
+  string val2 = std::to_string(imu_sensor.get_heading());
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
-  chassis.wait_drive();
+  master.set_text(0, 0, val + " " + val2);
+  // chassis.set_drive_pid(-12, DRIVE_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_drive_pid(-12, DRIVE_SPEED);
+  // chassis.wait_drive();
 }
 
 
@@ -91,16 +95,24 @@ void drive_example() {
 void turn_example() {
   // The first parameter is target degrees
   // The second parameter is max speed the robot will drive at
-
-
-  chassis.set_turn_pid(90, TURN_SPEED);
+  pros::Imu imu_sensor(11);
+  pros::Controller master (CONTROLLER_MASTER);
+  string val = std::to_string(imu_sensor.get_heading());
+  
+  //printf();
+  //printf("IMU get heading: %f degrees\n", imu_sensor.get_heading());
+  chassis.set_turn_pid(270, TURN_SPEED);
   chassis.wait_drive();
+  string val2 = std::to_string(imu_sensor.get_heading());
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
+  master.set_text(0, 0, val + " " + val2);
 
-  chassis.set_turn_pid(0, TURN_SPEED);
-  chassis.wait_drive();
+
+  // chassis.set_turn_pid(45, TURN_SPEED);
+  // chassis.wait_drive();
+
+  // chassis.set_turn_pid(0, TURN_SPEED);
+  // chassis.wait_drive();
 }
 
 
