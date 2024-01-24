@@ -29,8 +29,8 @@ void default_constants() {
   chassis.set_pid_constants(&chassis.headingPID, 15, 0, 25, 0);
   chassis.set_pid_constants(&chassis.forward_drivePID, 0.25, 0.05, 0, 15);
   chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 10, 5, 15);
-  chassis.set_pid_constants(&chassis.turnPID, 6, 0.003, 22.5, 15);
-  chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
+  chassis.set_pid_constants(&chassis.turnPID, 6, 0.003, 30, 15);
+  chassis.set_pid_constants(&chassis.swingPID, 6, 0.003, 22.5, 15);
 }
 
 void one_mogo_constants() {
@@ -60,6 +60,22 @@ void modified_exit_condition() {
 }
 
 
+void skills_auton() {
+  chassis.set_drive_pid(-16, DRIVE_SPEED, true);
+  chassis.wait_until(-10);
+  // chassis.set_swing_pid(ez::LEFT_SWING, 45, TURN_SPEED);
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_until(45);
+  chassis.set_drive_pid(-30, DRIVE_SPEED, true);
+  chassis.wait_until(-18);
+  chassis.set_drive_pid(17, DRIVE_SPEED, true);
+  chassis.wait_until(12);
+  chassis.wait_drive();
+  chassis.set_turn_pid(105, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(1, 50, true);
+  chassis.wait_drive();
+}
 
 
 ///

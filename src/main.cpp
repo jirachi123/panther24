@@ -71,10 +71,13 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
+    
+    Auton("Skills Auton", skills_auton),
     Auton("Example Drive\n\nDrive forward and come back.", drive_example),
     Auton("Example Turn\n\nTurn 3 times.", turn_example),
     Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
     Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
+    
     Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
     Auton("Combine all 3 movements", combining_movements),
     Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
@@ -159,6 +162,9 @@ void opcontrol() {
   pros::Motor intake(19); 
   pros::Motor catapult(1);
   intake.set_brake_mode(MOTOR_BRAKE_HOLD);
+  pros::ADIDigitalOut piston ('B');
+  pros::ADIDigitalOut wing1 ('E');
+  pros::ADIDigitalOut wing2 ('F');
 
   while (true) {
 
@@ -171,16 +177,35 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-  // catapult code
-  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+  // catapult 
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
     catapult = -127; 
   } else {
     catapult = 0;
   }
 
+  // pneumatics
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+    piston.set_value(true);
+  }
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+    piston.set_value(false);
+  }
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+    wing1.set_value(true);
+  } else {
+    wing1.set_value(false);
+  }
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+    wing2.set_value(true);
+  } else {
+    wing2.set_value(false);
+  }
+    
 
 
-  // intake code
+
+  // intake 
   if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
     intake = -127;
   } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
