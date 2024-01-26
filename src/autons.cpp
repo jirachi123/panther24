@@ -7,11 +7,13 @@
 /////
 
 
-const int DRIVE_SPEED = 120; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+const int DRIVE_SPEED = 120;
+const int DRIVE_SPEED_SLOW = 40; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
 const int TURN_SPEED  = 90;
+
 const int SWING_SPEED = 90;
 
 
@@ -26,7 +28,7 @@ void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, 15, 0, 25, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.25, 0.05, 0, 15);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 0.25, 0.05, 2, 15); // D=0
   chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 10, 5, 15);
   chassis.set_pid_constants(&chassis.turnPID, 6, 0.003, 30, 15);
   chassis.set_pid_constants(&chassis.swingPID, 6, 0.003, 22.5, 15);
@@ -62,6 +64,7 @@ void match_load() {
   pros::Motor catapult(1);
   pros::Motor vision(7);
   pros::Motor intake(19); 
+
   intake.set_brake_mode(MOTOR_BRAKE_HOLD);
   pros::ADIDigitalOut piston ('B');
   pros::ADIDigitalOut wing1 ('E');
@@ -89,7 +92,87 @@ void match_load() {
 }
 
 void comp_auton() {
+  pros::Motor catapult(1);
+  pros::Motor vision(7);
+  pros::Motor intake(19); 
+  pros::Controller master (CONTROLLER_MASTER);
   
+
+  pros::Optical optical_sensor(17);
+  pros::c::optical_rgb_s_t rgb_value;
+
+  intake.set_brake_mode(MOTOR_BRAKE_HOLD);
+  pros::ADIDigitalOut piston ('B');
+  pros::ADIDigitalOut wing1 ('E');
+  pros::ADIDigitalOut wing2 ('F');
+
+  chassis.set_drive_pid(54, DRIVE_SPEED, true);
+  
+  chassis.wait_drive();
+
+  master.set_text(0, 0, "2");
+
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  intake=-127;
+
+
+  chassis.set_drive_pid(8, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  intake=0;
+
+  chassis.set_drive_pid(-6, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+
+
+
+  intake = 127;
+  chassis.set_drive_pid(12, DRIVE_SPEED_SLOW, true);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+
+  intake=-127;
+
+  chassis.set_drive_pid(20, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  intake=0;
+
+  chassis.set_drive_pid(-6, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+
+  intake = 127;
+  chassis.set_drive_pid(32, DRIVE_SPEED_SLOW, true);
+  chassis.wait_drive();
+  intake=0;
+  chassis.reset_gyro();
+
+  chassis.set_turn_pid(180, TURN_SPEED);
+  chassis.wait_drive();
+
+  
+  chassis.set_drive_pid(24, DRIVE_SPEED_SLOW, true);
+  chassis.wait_drive();
+  intake = -127;
+  chassis.set_drive_pid(12, DRIVE_SPEED_SLOW, true);
+  chassis.wait_drive();
+  intake = 0;
+  chassis.set_drive_pid(-30, DRIVE_SPEED_SLOW, true);
+  chassis.wait_drive();
+  
+
+
+
 }
 
 
@@ -116,7 +199,7 @@ void skills_auton() {
   chassis.wait_until(12);
   chassis.wait_drive();
   chassis.set_turn_pid(120, TURN_SPEED);
-  chassis.wait_drive();
+   chassis.wait_drive();
   chassis.set_drive_pid(1, 50, true);
   chassis.wait_drive();
   //catapult = -127; 

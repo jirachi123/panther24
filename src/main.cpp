@@ -71,7 +71,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("Competition Auton", comp_auton),
+    Auton("Competition Offensive Auton", comp_auton),
     Auton("Match Load", match_load),
     Auton("Skills Auton", skills_auton),
     Auton("Example Drive\n\nDrive forward and come back.", drive_example),
@@ -192,7 +192,7 @@ void opcontrol() {
   if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
     piston.set_value(false);
   }
-  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
     wing1.set_value(true);
   } else {
     wing1.set_value(false);
