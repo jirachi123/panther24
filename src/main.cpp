@@ -62,7 +62,7 @@ void initialize() {
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
-  chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  chassis.set_curve_default(3, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
@@ -71,7 +71,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    
+    Auton("Competition Auton", comp_auton),
+    Auton("Match Load", match_load),
     Auton("Skills Auton", skills_auton),
     Auton("Example Drive\n\nDrive forward and come back.", drive_example),
     Auton("Example Turn\n\nTurn 3 times.", turn_example),
@@ -179,16 +180,16 @@ void opcontrol() {
     // . . .
   // catapult 
   if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-    catapult = -127; 
+    catapult = -110; 
   } else {
     catapult = 0;
   }
 
   // pneumatics
-  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
     piston.set_value(true);
   }
-  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
     piston.set_value(false);
   }
   if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
@@ -196,7 +197,7 @@ void opcontrol() {
   } else {
     wing1.set_value(false);
   }
-  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+  if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
     wing2.set_value(true);
   } else {
     wing2.set_value(false);

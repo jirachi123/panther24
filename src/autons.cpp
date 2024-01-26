@@ -15,7 +15,6 @@ const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
 
-
 ///
 // Constants
 ///
@@ -59,8 +58,18 @@ void modified_exit_condition() {
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
+void match_load() {
+  pros::Motor catapult(1);
+  pros::Motor vision(7);
+  pros::Motor intake(19); 
+  intake.set_brake_mode(MOTOR_BRAKE_HOLD);
+  pros::ADIDigitalOut piston ('B');
+  pros::ADIDigitalOut wing1 ('E');
+  pros::ADIDigitalOut wing2 ('F');
 
-void skills_auton() {
+  
+  //catapult=-110;
+
   chassis.set_drive_pid(-16, DRIVE_SPEED, true);
   chassis.wait_until(-10);
   // chassis.set_swing_pid(ez::LEFT_SWING, 45, TURN_SPEED);
@@ -71,10 +80,94 @@ void skills_auton() {
   chassis.set_drive_pid(17, DRIVE_SPEED, true);
   chassis.wait_until(12);
   chassis.wait_drive();
-  chassis.set_turn_pid(105, TURN_SPEED);
+  chassis.set_turn_pid(120, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(1, 50, false);
+  chassis.wait_drive();
+
+  catapult=-110;
+}
+
+void comp_auton() {
+  
+}
+
+
+void skills_auton() {
+  pros::Motor catapult(1);
+  pros::Motor vision(7);
+  pros::Motor intake(19); 
+  intake.set_brake_mode(MOTOR_BRAKE_HOLD);
+  pros::ADIDigitalOut piston ('B');
+  pros::ADIDigitalOut wing1 ('E');
+  pros::ADIDigitalOut wing2 ('F');
+
+  
+  //catapult=-110;
+
+  chassis.set_drive_pid(-16, DRIVE_SPEED, true);
+  chassis.wait_until(-10);
+  // chassis.set_swing_pid(ez::LEFT_SWING, 45, TURN_SPEED);
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_until(45);
+  chassis.set_drive_pid(-30, DRIVE_SPEED, true);
+  chassis.wait_until(-18);
+  chassis.set_drive_pid(17, DRIVE_SPEED, true);
+  chassis.wait_until(12);
+  chassis.wait_drive();
+  chassis.set_turn_pid(120, TURN_SPEED);
   chassis.wait_drive();
   chassis.set_drive_pid(1, 50, true);
   chassis.wait_drive();
+  //catapult = -127; 
+  pros::delay(1000);
+  chassis.reset_gyro();
+  chassis.set_swing_pid(ez::RIGHT_SWING, 90, SWING_SPEED);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+  chassis.set_swing_pid(ez::LEFT_SWING, -35, SWING_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-24, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+  chassis.set_swing_pid(ez::LEFT_SWING, -30, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-62, DRIVE_SPEED, true); // Big movement
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, -65, TURN_SPEED);
+  chassis.wait_drive();
+
+
+  chassis.set_drive_pid(-30, DRIVE_SPEED, false);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, -15, SWING_SPEED);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, 90, SWING_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(35, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_turn_pid(-55, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.reset_gyro();
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, -45, SWING_SPEED);
+  chassis.wait_drive();
+  
+  chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+  
+
 }
 
 
@@ -124,11 +217,11 @@ void turn_example() {
   master.set_text(0, 0, val + " " + val2);
 
 
-  // chassis.set_turn_pid(45, TURN_SPEED);
-  // chassis.wait_drive();
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
 
-  // chassis.set_turn_pid(0, TURN_SPEED);
-  // chassis.wait_drive();
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
 }
 
 
